@@ -1,6 +1,8 @@
 packages:
   - apps/*
   - packages/*
+  # apps/calls installs on its own (see apps/calls/README.md)
+  - '!apps/calls'
 catalog:
   '@100mslive/hms-noise-cancellation': ^0.0.1
   '@100mslive/hms-video-store': ^0.12.21
