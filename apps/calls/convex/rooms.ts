@@ -16,7 +16,7 @@ import {
   type QueryCtx,
 } from './_generated/server'
 import { RealtimeKit } from './lib/realtimekit'
-import { runWithRealtimeKit } from './lib/runtime'
+import { runEffect } from './lib/runtime'
 
 async function requireUser(ctx: QueryCtx | MutationCtx | ActionCtx) {
   const userId = await getAuthUserId(ctx)
@@ -73,7 +73,7 @@ async function ensureMeeting(ctx: ActionCtx, roomId: Id<'callRooms'>): Promise<s
   if (!room) throw new ConvexError('Room not found')
   if (room.remoteMeetingId) return room.remoteMeetingId
 
-  const { meetingId } = await runWithRealtimeKit(
+  const { meetingId } = await runEffect(
     Effect.gen(function* () {
       const rtk = yield* RealtimeKit
       return yield* rtk.createMeeting({ title: room.title })
@@ -118,7 +118,7 @@ export const join = action({
 
     try {
       const meetingId = await ensureMeeting(ctx, roomId)
-      const { token } = await runWithRealtimeKit(
+      const { token } = await runEffect(
         Effect.gen(function* () {
           const rtk = yield* RealtimeKit
           return yield* rtk.addParticipant({ meetingId, userId, name })

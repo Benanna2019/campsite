@@ -12,7 +12,7 @@ import type { Doc, Id } from './_generated/dataModel'
 import { internalAction, internalMutation, type MutationCtx } from './_generated/server'
 import type { RecordingStatus } from './schema'
 import { RealtimeKit } from './lib/realtimekit'
-import { runWithRealtimeKit } from './lib/runtime'
+import { runEffect } from './lib/runtime'
 import { decodeEventSync, type RealtimeKitEvent } from './lib/webhooks'
 
 type Meeting = { id: string; sessionId: string; startedAt?: string; endedAt?: string }
@@ -138,20 +138,26 @@ async function apply(ctx: MutationCtx, event: RealtimeKitEvent): Promise<'applie
       return 'applied'
     }
 
-    // §8: marked here; processed by the recording pipeline.
+    // §8: mark pending and hand off to the recording pipeline (pipeline.ts).
     case 'meeting.transcript': {
       const call = await upsertCall(ctx, event.meeting)
       if (!call) return 'ignored'
+      let pending = false
       for (const recording of await recordingsOf(ctx, call._id)) {
-        if (recording.transcriptStatus !== 'ready') await ctx.db.patch(recording._id, { transcriptStatus: 'pending' })
+        if (recording.transcriptStatus === 'ready') continue
+        await ctx.db.patch(recording._id, { transcriptStatus: 'pending' })
+        pending = true
       }
+      if (pending) await ctx.scheduler.runAfter(0, internal.pipeline.processTranscript, { callId: call._id })
       return 'applied'
     }
 
     case 'meeting.summary': {
       const call = await findCall(ctx, event.meeting.sessionId)
       if (!call) return 'ignored'
-      if (call.summaryStatus !== 'ready') await ctx.db.patch(call._id, { summaryStatus: 'pending' })
+      if (call.summaryStatus === 'ready') return 'applied'
+      await ctx.db.patch(call._id, { summaryStatus: 'pending' })
+      await ctx.scheduler.runAfter(0, internal.pipeline.processSummary, { callId: call._id })
       return 'applied'
     }
 
@@ -250,7 +256,7 @@ function recordingsOf(ctx: MutationCtx, callId: Id<'calls'>) {
 export const stopRecording = internalAction({
   args: { remoteRecordingId: v.string() },
   handler: async (_ctx, { remoteRecordingId }) => {
-    await runWithRealtimeKit(
+    await runEffect(
       Effect.gen(function* () {
         const rtk = yield* RealtimeKit
         yield* rtk.stopRecording(remoteRecordingId)
