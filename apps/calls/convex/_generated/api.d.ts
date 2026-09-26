@@ -8,7 +8,12 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
+import type * as http from "../http.js";
 import type * as lib_realtimekit from "../lib/realtimekit.js";
+import type * as lib_runtime from "../lib/runtime.js";
+import type * as rooms from "../rooms.js";
+import type * as testing_fakeRealtimeKit from "../testing/fakeRealtimeKit.js";
 
 import type {
   ApiFromModules,
@@ -17,7 +22,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
+  http: typeof http;
   "lib/realtimekit": typeof lib_realtimekit;
+  "lib/runtime": typeof lib_runtime;
+  rooms: typeof rooms;
+  "testing/fakeRealtimeKit": typeof testing_fakeRealtimeKit;
 }>;
 
 /**
