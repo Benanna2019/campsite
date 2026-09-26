@@ -5,6 +5,7 @@
 import * as Credentials from '@distilled.cloud/cloudflare/Credentials'
 import * as rtk from '@distilled.cloud/cloudflare/realtime-kit'
 import * as Config from 'effect/Config'
+import * as ConfigProvider from 'effect/ConfigProvider'
 import * as Context from 'effect/Context'
 import * as Data from 'effect/Data'
 import * as Effect from 'effect/Effect'
@@ -145,6 +146,11 @@ const liveConfig = Config.all({
   preset: Config.String('REALTIMEKIT_PRESET').pipe(Config.withDefault('group_call_participant')),
 })
 
+// Effect's default ConfigProvider also reads `import.meta.env`, which Convex's
+// runtime rejects at execution time ("import.meta unsupported"). Reading
+// process.env explicitly keeps config resolution Convex-safe.
+const convexEnv = ConfigProvider.layer(Effect.sync(() => ConfigProvider.fromEnvRecord(process.env)))
+
 export const RealtimeKitLive = Layer.effect(RealtimeKit)(
   Effect.gen(function* () {
     const { apiToken, ...settings } = yield* liveConfig
@@ -152,5 +158,5 @@ export const RealtimeKitLive = Layer.effect(RealtimeKit)(
       Effect.provide(Credentials.fromApiToken({ apiToken: Redacted.value(apiToken) })),
       Effect.provide(FetchHttpClient.layer)
     )
-  })
+  }).pipe(Effect.provide(convexEnv))
 )

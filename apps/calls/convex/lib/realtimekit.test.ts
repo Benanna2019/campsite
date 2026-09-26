@@ -126,3 +126,24 @@ describe('RealtimeKit service', () => {
     expect(error.operation).toBe('startRecording')
   })
 })
+
+describe('RealtimeKitLive', () => {
+  test('reads its settings from process.env and names what is missing', async () => {
+    const { RealtimeKitLive } = await import('./realtimekit')
+    const saved = { ...process.env }
+    delete process.env.REALTIMEKIT_APP_ID
+    process.env.CLOUDFLARE_ACCOUNT_ID = 'acct'
+    process.env.CLOUDFLARE_API_TOKEN = 'token'
+    try {
+      const exit = await Effect.runPromiseExit(Layer.build(RealtimeKitLive).pipe(Effect.scoped))
+      expect(exit._tag).toBe('Failure')
+      expect(String(exit)).toContain('REALTIMEKIT_APP_ID')
+
+      process.env.REALTIMEKIT_APP_ID = 'app'
+      const ok = await Effect.runPromiseExit(Layer.build(RealtimeKitLive).pipe(Effect.scoped))
+      expect(ok._tag).toBe('Success')
+    } finally {
+      process.env = saved
+    }
+  })
+})
