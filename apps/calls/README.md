@@ -1,7 +1,7 @@
 # Campsite Calls
 
 Calls, recordings and transcripts on Convex + Cloudflare RealtimeKit, written
-with Effect and provisioned with Alchemy. See
+with Effect, served by TanStack Start and provisioned with Alchemy. See
 [`docs/calls`](../../docs/calls) for the lifecycle spec and architecture.
 
 ## Setup
@@ -11,7 +11,7 @@ This app installs on its own, outside the monorepo workspace (see below):
 ```sh
 cd apps/calls
 pnpm install --ignore-workspace
-pnpm dev        # Convex dev backend + Vite
+pnpm dev        # Convex dev backend + TanStack Start dev server
 ```
 
 `pnpm dev` asks you to log in to Convex or use a local deployment. For a
@@ -25,7 +25,7 @@ CONVEX_AGENT_MODE=anonymous pnpm dev
 
 - `pnpm test` runs Convex functions in-process with `convex-test`
 - `pnpm typecheck`
-- `pnpm build`
+- `pnpm build` builds the TanStack Start app (client and server)
 
 ## Why it's outside the workspace
 

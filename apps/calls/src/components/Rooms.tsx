@@ -1,10 +1,11 @@
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
-import { href } from '../router'
 
 export function Rooms() {
   const rooms = useQuery(api.rooms.mine)
   const create = useMutation(api.rooms.create)
+  const navigate = useNavigate()
 
   return (
     <main className='mx-auto w-full max-w-2xl px-4 py-10'>
@@ -16,7 +17,7 @@ export function Rooms() {
             event.preventDefault()
             const title = String(new FormData(event.currentTarget).get('title') ?? '').trim()
             const roomId = await create(title ? { title } : {})
-            window.location.hash = href.room(roomId)
+            await navigate({ to: '/rooms/$roomId', params: { roomId } })
           }}
         >
           <input name='title' placeholder='New room name' className='input' />
@@ -27,9 +28,9 @@ export function Rooms() {
       <ul className='mt-8 divide-y divide-neutral-200 rounded-lg border border-neutral-200'>
         {rooms?.map((room) => (
           <li key={room._id}>
-            <a href={href.room(room._id)} className='block px-4 py-3 hover:bg-neutral-50'>
+            <Link to='/rooms/$roomId' params={{ roomId: room._id }} className='block px-4 py-3 hover:bg-neutral-50'>
               {room.title ?? 'Untitled room'}
-            </a>
+            </Link>
           </li>
         ))}
         {rooms?.length === 0 && <li className='px-4 py-3 text-sm text-neutral-500'>No rooms yet.</li>}
