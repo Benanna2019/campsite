@@ -12,6 +12,8 @@
     "install:app": "pnpm install --ignore-workspace"
   },
   "dependencies": {
+    "@auth/core": "0.41.3",
+    "@convex-dev/auth": "0.0.95",
     "convex": "1.46.0",
     "effect": "4.0.0-rc.117",
     "react": "19.3.0",
