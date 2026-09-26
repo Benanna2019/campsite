@@ -146,10 +146,17 @@ const liveConfig = Config.all({
   preset: Config.String('REALTIMEKIT_PRESET').pipe(Config.withDefault('group_call_participant')),
 })
 
-// Effect's default ConfigProvider also reads `import.meta.env`, which Convex's
-// runtime rejects at execution time ("import.meta unsupported"). Reading
-// process.env explicitly keeps config resolution Convex-safe.
-const convexEnv = ConfigProvider.layer(Effect.sync(() => ConfigProvider.fromEnvRecord(process.env)))
+const ENV_KEYS = ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'REALTIMEKIT_APP_ID', 'REALTIMEKIT_PRESET'] as const
+
+// Two Convex runtime differences, both invisible in Node and under Vitest:
+// - Effect's default ConfigProvider also reads `import.meta.env`, which
+//   Convex rejects when the code runs ("import.meta unsupported").
+// - Convex's process.env answers lookups by name but doesn't enumerate its
+//   keys, and fromEnvRecord builds its index by enumerating.
+// So read our variables by name into a plain record.
+const convexEnv = ConfigProvider.layer(
+  Effect.sync(() => ConfigProvider.fromEnvRecord(Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]))))
+)
 
 export const RealtimeKitLive = Layer.effect(RealtimeKit)(
   Effect.gen(function* () {
