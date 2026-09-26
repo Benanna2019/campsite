@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as calls from "../calls.js";
 import type * as http from "../http.js";
 import type * as lib_pipeline from "../lib/pipeline.js";
 import type * as lib_realtimekit from "../lib/realtimekit.js";
@@ -16,7 +17,9 @@ import type * as lib_runtime from "../lib/runtime.js";
 import type * as lib_webhooks from "../lib/webhooks.js";
 import type * as lifecycle from "../lifecycle.js";
 import type * as pipeline from "../pipeline.js";
+import type * as recordings from "../recordings.js";
 import type * as rooms from "../rooms.js";
+import type * as testing_fakeDownloads from "../testing/fakeDownloads.js";
 import type * as testing_fakeRealtimeKit from "../testing/fakeRealtimeKit.js";
 import type * as testing_signedWebhooks from "../testing/signedWebhooks.js";
 
@@ -28,6 +31,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  calls: typeof calls;
   http: typeof http;
   "lib/pipeline": typeof lib_pipeline;
   "lib/realtimekit": typeof lib_realtimekit;
@@ -35,7 +39,9 @@ declare const fullApi: ApiFromModules<{
   "lib/webhooks": typeof lib_webhooks;
   lifecycle: typeof lifecycle;
   pipeline: typeof pipeline;
+  recordings: typeof recordings;
   rooms: typeof rooms;
+  "testing/fakeDownloads": typeof testing_fakeDownloads;
   "testing/fakeRealtimeKit": typeof testing_fakeRealtimeKit;
   "testing/signedWebhooks": typeof testing_signedWebhooks;
 }>;
