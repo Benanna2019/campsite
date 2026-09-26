@@ -1,7 +1,7 @@
+import { Link } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
-import { href } from '../router'
 
 const status = { pending: 'Processing…', failed: "Couldn't be generated.", ready: '' } as const
 
@@ -12,9 +12,9 @@ export function CallDetail({ callId }: { callId: Id<'calls'> }) {
 
   return (
     <main className='mx-auto w-full max-w-3xl px-4 py-10'>
-      <a href={href.room(call.roomId)} className='text-sm text-neutral-500'>
+      <Link to='/rooms/$roomId' params={{ roomId: call.roomId }} className='text-sm text-neutral-500'>
         ← Room
-      </a>
+      </Link>
       <h1 className='mt-2 text-xl font-semibold'>{call.title ?? new Date(call.startedAt).toLocaleString()}</h1>
       <p className='mt-1 text-sm text-neutral-500'>{[...new Set(call.peers.map((p) => p.name))].join(', ')}</p>
 

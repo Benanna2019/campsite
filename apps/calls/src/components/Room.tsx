@@ -1,8 +1,8 @@
+import { Link } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
 import { CallProvider, useCall } from '../call'
-import { href } from '../router'
 import { ActiveCall } from './ActiveCall'
 
 const time = (ms: number) => new Date(ms).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })
@@ -29,9 +29,9 @@ export function Room({ roomId }: { roomId: Id<'callRooms'> }) {
 
   return (
     <main className='mx-auto w-full max-w-4xl px-4 py-10'>
-      <a href={href.rooms()} className='text-sm text-neutral-500'>
+      <Link to='/' className='text-sm text-neutral-500'>
         ← Rooms
-      </a>
+      </Link>
       <h1 className='mt-2 text-xl font-semibold'>{room?.title ?? 'Untitled room'}</h1>
       <p className='mt-1 text-sm text-neutral-500'>Share this page's link to invite people.</p>
 
@@ -45,7 +45,11 @@ export function Room({ roomId }: { roomId: Id<'callRooms'> }) {
       <ul className='mt-3 divide-y divide-neutral-200 rounded-lg border border-neutral-200'>
         {history?.map((call) => (
           <li key={call._id}>
-            <a href={href.call(call._id)} className='flex items-center justify-between px-4 py-3 hover:bg-neutral-50'>
+            <Link
+              to='/calls/$callId'
+              params={{ callId: call._id }}
+              className='flex items-center justify-between px-4 py-3 hover:bg-neutral-50'
+            >
               <span>
                 {call.title ?? time(call.startedAt)}
                 <span className='ml-2 text-sm text-neutral-500'>{call.peerNames.join(', ')}</span>
@@ -53,7 +57,7 @@ export function Room({ roomId }: { roomId: Id<'callRooms'> }) {
               <span className='text-sm text-neutral-500'>
                 {call.live ? 'Live now' : call.recordingsDuration > 0 ? minutes(call.recordingsDuration) : ''}
               </span>
-            </a>
+            </Link>
           </li>
         ))}
         {history?.length === 0 && <li className='px-4 py-3 text-sm text-neutral-500'>No calls yet.</li>}
