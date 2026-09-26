@@ -1,1 +1,19 @@
 @import 'tailwindcss';
+
+@layer components {
+  .input {
+    @apply rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-500;
+  }
+  .btn {
+    @apply inline-flex items-center rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50 disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-neutral-900 px-3 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50;
+  }
+  .btn-danger {
+    @apply inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm text-white hover:bg-red-500;
+  }
+  button {
+    cursor: pointer;
+  }
+}

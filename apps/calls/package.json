@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@auth/core": "0.41.3",
+    "@cloudflare/realtimekit": "2.0.2",
+    "@cloudflare/realtimekit-react": "2.0.2",
     "@convex-dev/auth": "0.0.95",
     "@distilled.cloud/cloudflare": "1.0.0-rc.12",
     "convex": "1.46.0",
