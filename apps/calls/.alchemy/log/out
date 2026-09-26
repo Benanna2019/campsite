@@ -1,0 +1,3 @@
+timestamp=2026-09-26T17:28:28.804Z level=DEBUG fiber=#1 message="auth lock: acquiring '/Users/benjaminpatton/.alchemy/lock/profiles-migrate.lock' for profiles-migrate"
+timestamp=2026-09-26T17:28:28.805Z level=DEBUG fiber=#1 message="auth lock: acquired '/Users/benjaminpatton/.alchemy/lock/profiles-migrate.lock' for profiles-migrate"
+timestamp=2026-09-26T17:28:28.805Z level=DEBUG fiber=#1 message="auth lock: releasing '/Users/benjaminpatton/.alchemy/lock/profiles-migrate.lock' for profiles-migrate"
