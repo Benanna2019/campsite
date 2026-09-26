@@ -8,13 +8,17 @@
  * @module
  */
 
+import type * as lib_realtimekit from "../lib/realtimekit.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  "lib/realtimekit": typeof lib_realtimekit;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
