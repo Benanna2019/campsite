@@ -12,8 +12,11 @@ import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as lib_realtimekit from "../lib/realtimekit.js";
 import type * as lib_runtime from "../lib/runtime.js";
+import type * as lib_webhooks from "../lib/webhooks.js";
+import type * as lifecycle from "../lifecycle.js";
 import type * as rooms from "../rooms.js";
 import type * as testing_fakeRealtimeKit from "../testing/fakeRealtimeKit.js";
+import type * as testing_signedWebhooks from "../testing/signedWebhooks.js";
 
 import type {
   ApiFromModules,
@@ -26,8 +29,11 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "lib/realtimekit": typeof lib_realtimekit;
   "lib/runtime": typeof lib_runtime;
+  "lib/webhooks": typeof lib_webhooks;
+  lifecycle: typeof lifecycle;
   rooms: typeof rooms;
   "testing/fakeRealtimeKit": typeof testing_fakeRealtimeKit;
+  "testing/signedWebhooks": typeof testing_signedWebhooks;
 }>;
 
 /**
